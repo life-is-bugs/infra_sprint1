@@ -1,0 +1,5 @@
+IP: 130.193.52.133;
+name_taski: https://taski-mk.hopto.org;
+name_kittygram: https://kittygram-mk.ddns.net;
+login: superuser;
+password: Supertest1123;

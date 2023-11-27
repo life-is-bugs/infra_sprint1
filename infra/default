@@ -1,0 +1,87 @@
+
+server {
+    server_name 130.193.52.133 taski-mk.hopto.org;
+	
+    location /api/ {
+        proxy_pass http://127.0.0.1:8000;
+    }
+
+    location /admin/ {
+        proxy_pass http://127.0.0.1:8000;
+    }
+
+    location / {
+        root   /var/www/taski;
+        index  index.html index.htm;
+        try_files $uri /index.html;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/taski-mk.hopto.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/taski-mk.hopto.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    server_name kittygram-mk.ddns.net;
+
+    location /api/ {
+        client_max_body_size 20M;
+	proxy_pass http://127.0.0.1:8001;
+    }
+
+    location /admin/ {
+	client_max_body_size 20M;
+        proxy_pass http://127.0.0.1:8001;
+    }
+
+    location /media/ {
+        alias /var/www/kittygram/media/;
+    }
+  
+    location / {
+        root   /var/www/kittygram;
+        index  index.html  index.htm;
+        try_files $uri /index.html;
+    }
+
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/kittygram-mk.ddns.net/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/kittygram-mk.ddns.net/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = taski-mk.hopto.org) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+
+    listen 80;
+    server_name 130.193.52.133 taski-mk.hopto.org;
+    return 404; # managed by Certbot
+
+
+}
+
+
+server {
+    if ($host = kittygram-mk.ddns.net) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name kittygram-mk.ddns.net;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
